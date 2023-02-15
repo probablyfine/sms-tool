@@ -1,0 +1,173 @@
+#:kivy 2.1.0
+
+<SMSTool>
+  id: sms_tool
+  orientation: 'vertical'
+  padding: '50dp', '40dp'
+  spacing: '10dp'
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '10dp'
+    size_hint_y: None
+    height: '28dp'
+    FieldLabel:
+      text: 'Account SID:'
+    TextInput:
+      id: text_input_account_sid
+      multiline: False
+      hint_text: 'Paste your Twilio Account SID...'
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '10dp'
+    size_hint_y: None
+    height: '28dp'
+    FieldLabel:
+      text: 'Auth Token:'
+    TextInput:
+      id: text_input_auth_token
+      multiline: False
+      hint_text: 'Paste your Twilio Auth Token...'
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '10dp'
+    size_hint_y: None
+    height: '28dp'
+    FieldLabel:
+      text: 'From Number:'
+    TextInput:
+      id: text_input_from_number
+      multiline: False
+      hint_text: 'Paste your Twilio phone number...'
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '10dp'
+    size_hint_y: None
+    height: '28dp'
+    FieldLabel:
+      text: 'Contacts File:'
+    TextInput:
+      id: text_input_contacts
+      hint_text: 'Drag and drop .csv file anywhere...'
+      disabled: True
+      multiline: False
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '10dp'
+    size_hint_y: None
+    height: '28dp'
+    FieldLabel:
+      text: 'Rate Limit:'
+    TextInput:
+      id: text_input_rate_limit
+      input_filter: 'int'
+      multiline: False
+      size_hint_x: None
+      width: '30dp'
+      text: '1'
+    Label:
+      text: 'message(s) per second'
+      text_size: self.size
+      halign: 'left'
+      valign: 'middle'
+  FieldLabel:
+    size_hint_y: None
+    height: '28dp'
+    valign: 'bottom'
+    text: 'Message:'
+  TextInput:
+    id: text_input_message
+    size_hint_y: None
+    height: '140dp'
+    hint_text: 'Type your SMS text here...'
+  FieldLabel:
+    text: 'Loaded Contacts:'
+    valign: 'bottom'
+    size_hint_y: None
+    height: '28dp'
+  BoxLayout:
+    orientation: 'vertical'
+    BoxLayout:
+      orientation: 'horizontal'
+      spacing: '1dp'
+      size_hint_y: None
+      height: '30dp'
+      DataHeader:
+        text: '#'
+        size_hint_x: None
+        width: '30dp'
+      DataHeader:
+        text: 'First'
+      DataHeader:
+        text: 'Last'
+      DataHeader:
+        text: 'Phone'
+      DataHeader:
+        text: 'Status'
+        size_hint_x: None
+        width: '110dp'
+    ScrollView:
+      id: scrollview_contacts
+      scroll_type: ['bars']
+      bar_color: 0, 0, 0, 1
+      bar_inactive_color: 0, 0, 0, 1
+      bar_width: '7dp'
+      height: sms_tool.height
+      DataGrid:
+        id: data_grid
+  BoxLayout:
+    orientation: 'horizontal'
+    spacing: '15dp'
+    size_hint_y: None
+    height: '40dp'
+    Button:
+      id: button_send
+      size_hint_x: 0.8
+      text: 'Send 0 Messages'
+      disabled: True
+      background_disabled_normal: self.background_normal
+      disabled_color: 0, 0, 0, 1
+    Button:
+      id: button_pause
+      size_hint_x: 0.2
+      text: 'Pause'
+      disabled: True
+      background_disabled_normal: self.background_normal
+      disabled_color: 0, 0, 0, 1
+
+<DataGrid>
+  cols: 5
+  spacing: '1dp'
+  size_hint_y: None
+  height: self.minimum_height
+
+<FieldLabel>
+  text_size: self.size
+  halign: 'left'
+  valign: 'middle'
+  size_hint_x: None
+  width: '120dp'
+
+<DataCell>
+  height: '30dp'
+  size_hint_y: None
+  font_size: '14sp'
+  color: 0, 0, 0, 1
+  background_color: 0.7, 0.7, 0.7, 1
+  markup: True
+  canvas.before:
+    Color: 
+      rgba: self.background_color
+    Rectangle:
+      pos: self.pos
+      size: self.size
+
+<DataHeader>
+  size_hint_y: None
+  font_size: '14sp'
+  height: '30dp'
+  canvas.before:
+    Color: 
+      rgb: 0.2,0.2,0.2
+    Rectangle:
+      pos: self.pos
+      size: self.size
