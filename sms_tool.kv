@@ -94,7 +94,7 @@
       DataHeader:
         text: '#'
         size_hint_x: None
-        width: '30dp'
+        width: '50dp'
       DataHeader:
         text: 'First'
       DataHeader:
@@ -105,15 +105,14 @@
         text: 'Status'
         size_hint_x: None
         width: '110dp'
-    ScrollView:
-      id: scrollview_contacts
+    RV:
+      id: recycle_view
       scroll_type: ['bars']
+      smooth_scroll_end: 10
       bar_color: 0, 0, 0, 1
       bar_inactive_color: 0, 0, 0, 1
       bar_width: '7dp'
       height: sms_tool.height
-      DataGrid:
-        id: data_grid
   BoxLayout:
     orientation: 'horizontal'
     spacing: '15dp'
@@ -134,11 +133,45 @@
       background_disabled_normal: self.background_normal
       disabled_color: 0, 0, 0, 1
 
-<DataGrid>
+<RV>:
+  viewclass: 'DataRow'
+  RecycleBoxLayout:
+    default_size: None, None
+    default_size_hint: 1, None
+    spacing: '1dp'
+    size_hint_y: None
+    height: self.minimum_height
+    orientation: 'vertical'
+
+<DataRow>
   cols: 5
   spacing: '1dp'
+  height: '30dp'
   size_hint_y: None
-  height: self.minimum_height
+  index_text: ''
+  first_name_text: ''
+  last_name_text: ''
+  phone_text: ''
+  status_text: ''
+  DataCell:
+    id: cell_index
+    size_hint_x: None
+    width: '50dp'
+    text: root.index_text
+  DataCell:
+    id: cell_first_name
+    text: root.first_name_text
+  DataCell:
+    id: cell_last_name
+    text: root.last_name_text
+  DataCell:
+    id: cell_phone
+    text: root.phone_text
+  DataCell:
+    id: cell_status
+    size_hint_x: None
+    width: '110dp'
+    text: root.status_text
 
 <FieldLabel>
   text_size: self.size

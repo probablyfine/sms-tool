@@ -1,5 +1,7 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
 
 import webbrowser
 
@@ -24,66 +26,102 @@ class DataHeader(Label):
     super(DataHeader, self).__init__(*args, **kwargs)
 
 # Holds all the CSV data Labels
-class DataGrid(GridLayout):
+class DataRow(
+  RecycleDataViewBehavior,
+  GridLayout
+):
+  index = None
 
   def __init__(self, *args, **kwargs):
-    super(DataGrid, self).__init__(*args, **kwargs)
-    
-    # Used for numbering each data row sequentially
-    self.next_num = 0
-    
-    # Stores the widgets for each data row
-    self.data_rows = dict()
+    super(DataRow, self).__init__(*args, **kwargs)
+
+    self.cell_labels = [
+      self.ids.cell_index,
+      self.ids.cell_first_name,
+      self.ids.cell_last_name,
+      self.ids.cell_phone,
+      self.ids.cell_status,
+    ]
       
+  def refresh_view_attrs(
+    self,
+    rv,
+    index,
+    data
+  ):
+    self.index = index
+    self.index_text = str(index+1)
+    self.first_name_text = data['first_name']
+    self.last_name_text = data['last_name']
+    self.phone_text = data['phone_number']
+    self.status_text = data['status']
+
+    for lbl in self.cell_labels:
+      lbl.background_color = data['color']
+    
+    return super(DataRow, self).refresh_view_attrs(
+      rv,
+      index,
+      data
+    )
+
+class RV(RecycleView):
+  def __init__(self, **kwargs):
+    super(RV, self).__init__(**kwargs)
+    self.clear_rows()
+
+  def clear_rows(self):
+    self.data = []
+
   def add_row(
     self,
     first_name,
     last_name,
     phone_number,
-    status
+    status,
+    color=(0.7, 0.7, 0.7, 1)
   ):
-      
-    self.next_num += 1
-    
-    c1 = DataCell(
-      text=f'[b]{self.next_num}[/b]',
-      size_hint_x=None,
-      width='30dp'
+    self.data.append(
+      {
+        'first_name': first_name,
+        'last_name': last_name,
+        'phone_number': phone_number,
+        'status': status,
+        'color': color
+      }
     )
-    c2 = DataCell(text=first_name)
-    c3 = DataCell(text=last_name)
-    c4 = DataCell(text=phone_number)
-    c5 = DataCell(
-      text=status,
-      size_hint_x=None,
-      width='110dp'
-    )
-    
-    self.data_rows[self.next_num] = (c1,c2,c3,c4,c5)
-    
-    self.add_widget(c1)
-    self.add_widget(c2)
-    self.add_widget(c3)
-    self.add_widget(c4)
-    self.add_widget(c5)
 
-    return self.next_num
-      
-  def clear_rows(self):
-    if self.data_rows:
-      for i in range(1, self.next_num+1):
-        self.remove_row(i)
-
-  def remove_row(self, row_num):
-    for c in self.data_rows[row_num]:
-      self.remove_widget(c)
-    self.next_num -= 1
-    self.data_rows.pop(row_num)
-      
-  def recolor_entry(
+  def update_row(
     self,
-    row_num,
-    color
+    index,
+    data
   ):
-    for lbl in self.data_rows[row_num]:
-      lbl.background_color = color
+    for field in [
+      'first_name',
+      'last_name',
+      'phone_number',
+      'status',
+      'color'
+    ]:
+      if field in data:
+        self.data[index][field] = data[field]
+
+    self.refresh_visible_rows()
+
+  def refresh_visible_rows(self):
+    for w in (
+      self
+      .children[0] # this is a RecycleBoxLayout
+      .children    # list of all currently-visible widgets
+    ):
+      w.refresh_view_attrs(
+        self,
+        w.index,
+        self.data[w.index]
+      )
+
+###########
+#
+# unnecessary to store data in RV as well as main App..?
+#
+###########

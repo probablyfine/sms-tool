@@ -1,5 +1,5 @@
 from util import load_csv
-from widgets import FieldLabel, DataCell, DataHeader, DataGrid
+from widgets import FieldLabel, DataCell, DataHeader, DataRow, RV
 
 from pathlib import Path
 
@@ -73,18 +73,18 @@ class SMSTool(BoxLayout):
     self.sent = False
     self.paused = False
 
-    data_grid = (
+    recycle_view = (
       self
       .ids
-      .data_grid
+      .recycle_view
     )
 
-    data_grid.clear_rows()
+    recycle_view.clear_rows()
 
     # Populate some blank rows, just so there isn't a weird empty
     # gap when no CSV is loaded
     for _ in range(5):
-      data_grid.add_row('', '', '', '')
+      recycle_view.add_row('', '', '', '')
 
     btn = (
       self
@@ -135,17 +135,16 @@ class SMSTool(BoxLayout):
         text_input_contacts.text = ''
 
   def handle_csv_load(self):
-    data_grid = (
+    recycle_view = (
       self
       .ids
-      .data_grid
+      .recycle_view
     )
     
-    data_grid.clear_rows()
+    recycle_view.clear_rows()
 
     for i, row in enumerate(self.csv_data):
-      print(i)
-      data_grid.add_row(*row, 'Not Sent')
+      recycle_view.add_row(*row, 'Not Sent')
 
     (
       self
@@ -156,7 +155,7 @@ class SMSTool(BoxLayout):
 
     self.check_ok_to_send()
 
-    self.current_message = 1
+    self.current_message = 0 # zero-indexed
 
   def check_ok_to_send(self, *args):
 
@@ -240,7 +239,7 @@ class SMSTool(BoxLayout):
       return
 
     # If we don't have an indicator of which message we're on, return
-    if not self.current_message:
+    if self.current_message is None:
       return
 
     (
@@ -278,15 +277,15 @@ class SMSTool(BoxLayout):
       .text
     )
 
-    data_grid = (
+    recycle_view = (
       self
       .ids
-      .data_grid
+      .recycle_view
     )
 
-    current_data_row = data_grid.data_rows[self.current_message]
+    current_data_row = recycle_view.data[self.current_message]
 
-    to_number = current_data_row[3].text
+    to_number = current_data_row['phone_number']
 
     self.request_thread = TwilioThread(
       account_sid,
@@ -297,15 +296,13 @@ class SMSTool(BoxLayout):
     )
     self.request_thread.start()
 
-    current_data_row[4].text = 'Sending...'
-
-    # Change current data row color to yellow
-    data_grid.recolor_entry(
+    recycle_view.update_row(
       self.current_message,
-      clr_yellow
+      {
+        'status': 'Sending...',
+        'color': clr_yellow
+      }
     )
-
-    self.current_message += 1
 
     Clock.schedule_once(self.send_next_message, 0.01)
 
@@ -362,22 +359,21 @@ class SMSTool(BoxLayout):
     else:
       color = clr_red
 
-    data_grid = (
+    recycle_view = (
       self
       .ids
-      .data_grid
+      .recycle_view
     )
 
-    # Set the color of the row green if successful, red if error
-    data_grid.recolor_entry(
-      self.current_message - 1,
-      color
+    recycle_view.update_row(
+      self.current_message,
+      {
+        'status': status_text,
+        'color': color
+      }
     )
-      
-    current_cell = data_grid.data_rows[self.current_message - 1][-1]
-    current_cell.text = status_text
     
-    remaining_messages = len(self.csv_data) - self.current_message + 1
+    remaining_messages = len(self.csv_data) - self.current_message - 1
 
     # Update the Send button's label to show progress
     btn = self.ids.button_send
@@ -386,7 +382,7 @@ class SMSTool(BoxLayout):
     self.request_thread = None
     
     # Happens when we've sent all the messages
-    if self.current_message >= len(self.csv_data) + 1:
+    if self.current_message >= len(self.csv_data) - 1:
       self.current_message = None
 
       self.ids.button_send.text = 'Finished Sending'
@@ -400,6 +396,9 @@ class SMSTool(BoxLayout):
       return
     
     else:
+
+      self.current_message += 1
+
       message_rate = float(
         self
         .ids
