@@ -19,12 +19,7 @@ def load_csv(path):
       if not formatted_number:
         continue
 
-      ###########################################
-      # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ###########################################
-      
-      # if formatted_number not in existing_numbers:
-      if True:
+      if formatted_number not in existing_numbers:
         rows.append([
           row[0],
           row[1],

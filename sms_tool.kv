@@ -105,14 +105,30 @@
         text: 'Status'
         size_hint_x: None
         width: '110dp'
+      DataHeader:
+        size_hint_x: None
+        width: '10dp'
+        canvas.before:
+          Color: 
+            rgb: 0, 0, 0
+          Rectangle:
+            pos: self.pos
+            size: self.size
     RV:
       id: recycle_view
       scroll_type: ['bars']
       smooth_scroll_end: 10
-      bar_color: 0, 0, 0, 1
-      bar_inactive_color: 0, 0, 0, 1
-      bar_width: '7dp'
+      bar_color: 119/255, 170/255, 221/255, 1
+      bar_inactive_color: 73/255 ,140/255, 194/255, 1
+      bar_width: '10dp'
       height: sms_tool.height
+      canvas.after:
+        Color:
+          rgba: .7, .7, .7, 1
+        Line:
+          width: dp(1)
+          rectangle: self.x, self.y, self.width + dp(2), self.height
+
   BoxLayout:
     orientation: 'horizontal'
     spacing: '15dp'
@@ -144,7 +160,7 @@
     orientation: 'vertical'
 
 <DataRow>
-  cols: 5
+  cols: 6
   spacing: '1dp'
   height: '30dp'
   size_hint_y: None
@@ -172,6 +188,16 @@
     size_hint_x: None
     width: '110dp'
     text: root.status_text
+  DataCell:
+    size_hint_x: None
+    width: '10dp'
+    canvas.before:
+      Color: 
+        rgb: 0, 0, 0
+      Rectangle:
+        pos: self.pos
+        size: self.size
+
 
 <FieldLabel>
   text_size: self.size

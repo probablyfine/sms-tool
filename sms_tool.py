@@ -83,7 +83,7 @@ class SMSTool(BoxLayout):
 
     # Populate some blank rows, just so there isn't a weird empty
     # gap when no CSV is loaded
-    for _ in range(5):
+    for _ in range(6):
       recycle_view.add_row('', '', '', '')
 
     btn = (
@@ -143,7 +143,7 @@ class SMSTool(BoxLayout):
     
     recycle_view.clear_rows()
 
-    for i, row in enumerate(self.csv_data):
+    for row in self.csv_data:
       recycle_view.add_row(*row, 'Not Sent')
 
     (
@@ -419,6 +419,6 @@ if __name__ == '__main__':
   Config.set( 'kivy', 'exit_on_escape', 0)
   Config.set( 'graphics', 'position', 'custom')
   
-  Window.size = (dp(330), dp(380))
+  Window.size = (dp(330), dp(381))
 
   SMSToolApp().run()

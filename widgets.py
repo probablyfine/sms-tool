@@ -119,9 +119,3 @@ class RV(RecycleView):
         w.index,
         self.data[w.index]
       )
-
-###########
-#
-# unnecessary to store data in RV as well as main App..?
-#
-###########
