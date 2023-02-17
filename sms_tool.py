@@ -15,6 +15,7 @@ from kivy.config import Config
 
 from twilio.base.exceptions import TwilioRestException
 from twilio.base.instance_resource import InstanceResource
+from sms_counter import SMSCounter
 
 clr_green  = (125/255, 184/255, 116/255, 1)
 clr_red    = (217/255, 33/255,  32/255,  1)
@@ -41,6 +42,14 @@ class SMSTool(BoxLayout):
       text_input.bind(
         text=self.check_ok_to_send
       )
+
+    (
+      self
+      .ids
+      .text_input_message
+    ).bind(
+      text=self.count_segments
+    )
 
     (
       self
@@ -90,6 +99,23 @@ class SMSTool(BoxLayout):
     )
     btn.text = 'Send 0 Messages'
 
+  def count_segments(self, *args):
+    message = (
+      self
+      .ids
+      .text_input_message
+      .text
+    )
+
+    segments = SMSCounter.count(message)['messages']
+
+    (
+      self
+      .ids
+      .field_label_segments
+      .text
+    ) = f'Message ({segments} segments used):'
+
   def handle_file_drop(
     self,
     window,
@@ -130,6 +156,8 @@ class SMSTool(BoxLayout):
 
       else:
         text_input_contacts.text = ''
+
+      self.check_ok_to_send()
 
   def handle_csv_load(self):
     recycle_view = (
