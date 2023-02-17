@@ -3,7 +3,6 @@ from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
 
 class TwilioThread(Thread):
-  
   def __init__(
     self,
     account_sid,

@@ -1,13 +1,12 @@
 from util import load_csv
 from widgets import FieldLabel, DataCell, DataHeader, DataRow, RV
+from twilio_thread import TwilioThread
 
 from pathlib import Path
-
 from requests.exceptions import ConnectionError
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.clock import Clock
@@ -16,8 +15,6 @@ from kivy.config import Config
 
 from twilio.base.exceptions import TwilioRestException
 from twilio.base.instance_resource import InstanceResource
-
-from twilio_thread import TwilioThread
 
 clr_green  = (125/255, 184/255, 116/255, 1)
 clr_red    = (217/255, 33/255,  32/255,  1)
@@ -113,16 +110,16 @@ class SMSTool(BoxLayout):
 
       self.init_state()
 
+      try:
+        self.csv_data = load_csv(path)
+      except:
+        self.csv_data = None
+
       text_input_contacts = (
         self
         .ids
         .text_input_contacts
       )
-
-      try:
-        self.csv_data = load_csv(path)
-      except:
-        self.csv_data = None
 
       if self.csv_data:
         text_input_contacts.text = str(path)
@@ -153,9 +150,9 @@ class SMSTool(BoxLayout):
       .text
     ) = f'Send {len(self.csv_data)} Messages'
 
-    self.check_ok_to_send()
-
     self.current_message = 0 # zero-indexed
+
+    self.check_ok_to_send()
 
   def check_ok_to_send(self, *args):
 
@@ -200,6 +197,16 @@ class SMSTool(BoxLayout):
       .button_pause
       .disabled
     ) = False
+
+    (
+      self
+      .ids
+      .button_send
+      .disabled
+     ) = True
+
+    for text_input in self.text_inputs:
+      text_input.disabled = True
     
     self.send_next_message()
 
@@ -226,7 +233,10 @@ class SMSTool(BoxLayout):
     # If we have an active Twilio request, but no response yet, schedule another
     # check and don't do anything else
     if self.request_thread and not self.request_thread.response:
-      Clock.schedule_once(self.send_next_message, 0.01)
+      Clock.schedule_once(
+        self.send_next_message,
+        0.01
+      )
       return
 
     # If we have an active Twilio request AND a response, handle the response
@@ -241,16 +251,6 @@ class SMSTool(BoxLayout):
     # If we don't have an indicator of which message we're on, return
     if self.current_message is None:
       return
-
-    (
-      self
-      .ids
-      .button_send
-      .disabled
-     ) = True
-
-    for text_input in self.text_inputs:
-      text_input.disabled = True
 
     account_sid = (
       self
@@ -304,7 +304,10 @@ class SMSTool(BoxLayout):
       }
     )
 
-    Clock.schedule_once(self.send_next_message, 0.01)
+    Clock.schedule_once(
+      self.send_next_message,
+      0.01
+    )
 
   def handle_request_response(self):
 
@@ -326,11 +329,10 @@ class SMSTool(BoxLayout):
       response,
       InstanceResource
     ):
-      error_code = response.error_code
 
       # The response might've contained an error
-      if error_code:
-        status_text = make_error_text(error_code)
+      if response.error_code:
+        status_text = make_error_text(response.error_code)
 
       # If it didn't contain an error, assume the message was sent
       else:
@@ -341,9 +343,7 @@ class SMSTool(BoxLayout):
       response,
       TwilioRestException
     ):
-      error_code = response.code
-
-      status_text = make_error_text(error_code)
+      status_text = make_error_text(response.code)
 
     # This happens if network connectivity is lost
     elif isinstance(
@@ -351,6 +351,7 @@ class SMSTool(BoxLayout):
       ConnectionError
     ):
       status_text = 'Network Error'
+
     else:
       status_text = 'Error'
 
@@ -379,14 +380,16 @@ class SMSTool(BoxLayout):
     btn = self.ids.button_send
     btn.text = f'Sending {remaining_messages} Messages...'
 
+    # Toss out the thread, we'll need to create a new one
+    # for the next message we send.
     self.request_thread = None
     
     # Happens when we've sent all the messages
     if self.current_message >= len(self.csv_data) - 1:
       self.current_message = None
 
-      self.ids.button_send.text = 'Finished Sending'
-      self.ids.button_send.disabled = True
+      btn.text = 'Finished Sending'
+      btn.disabled = True
 
       for text_input in self.text_inputs:
         text_input.disabled = False
@@ -408,7 +411,10 @@ class SMSTool(BoxLayout):
       
       message_delay = 1 / message_rate
 
-      Clock.schedule_once(self.send_next_message, message_delay)
+      Clock.schedule_once(
+        self.send_next_message,
+        message_delay
+      )
 
 class SMSToolApp(App):
   def build(self):

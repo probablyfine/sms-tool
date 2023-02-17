@@ -25,7 +25,7 @@ class DataHeader(Label):
   def __init__(self, *args, **kwargs):
     super(DataHeader, self).__init__(*args, **kwargs)
 
-# Holds all the CSV data Labels
+# Holds all the CSV data Labels for a single row
 class DataRow(
   RecycleDataViewBehavior,
   GridLayout
@@ -81,15 +81,13 @@ class RV(RecycleView):
     status,
     color=(0.7, 0.7, 0.7, 1)
   ):
-    self.data.append(
-      {
-        'first_name': first_name,
-        'last_name': last_name,
-        'phone_number': phone_number,
-        'status': status,
-        'color': color
-      }
-    )
+    self.data.append({
+      'first_name': first_name,
+      'last_name': last_name,
+      'phone_number': phone_number,
+      'status': status,
+      'color': color
+    })
 
   def update_row(
     self,
