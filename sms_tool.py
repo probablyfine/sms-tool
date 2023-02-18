@@ -342,7 +342,7 @@ class SMSTool(BoxLayout):
     def make_error_text(err_code):
       return (
         f'[ref=https://www.twilio.com/docs/api/errors/{err_code}]' +
-        f'Error {err_code}' +
+        f'[u]Error {err_code}[/u]' +
         '[/ref]'
       )
 
