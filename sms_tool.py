@@ -1,11 +1,17 @@
-from util import load_csv
-from widgets import FieldLabel, DataCell, DataHeader, DataRow, RV
-from twilio_thread import TwilioThread
+import os, sys
 
+# Needed if packaged using PyInstaller
+if hasattr(sys, '_MEIPASS'):
+  os.environ['KIVY_NO_CONSOLELOG'] = '1'
+  
 import platform
 from pathlib import Path
 from requests.exceptions import ConnectionError
 
+from util import load_csv
+from widgets import FieldLabel, DataCell, DataHeader, DataRow, RV
+from twilio_thread import TwilioThread
+  
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
@@ -13,6 +19,7 @@ from kivy.metrics import dp
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy.resources import resource_add_path, resource_find
 
 from twilio.base.exceptions import TwilioRestException
 from twilio.base.instance_resource import InstanceResource
@@ -22,6 +29,14 @@ clr_green  = (125/255, 184/255, 116/255, 1)
 clr_red    = (217/255, 33/255,  32/255,  1)
 clr_yellow = (217/255, 173/255, 60/255,  1)
 
+# Needed if packaged using PyInstaller
+if hasattr(sys, '_MEIPASS'):
+  resource_add_path(
+    os.path.join(
+      sys._MEIPASS
+    )
+  )
+  
 Builder.load_file('sms_tool.kv')
 
 class SMSTool(BoxLayout):
@@ -456,10 +471,11 @@ if __name__ == '__main__':
   window_width = dp(660)
   window_height = dp(776)
 
+  # Handle weird window sizing on macOS
   if platform.system() == 'Darwin':
     window_width /= 2
     window_height /= 2
 
   Window.size = (window_width, window_height)
-
+        
   SMSToolApp().run()
