@@ -2,6 +2,7 @@ from util import load_csv
 from widgets import FieldLabel, DataCell, DataHeader, DataRow, RV
 from twilio_thread import TwilioThread
 
+import platform
 from pathlib import Path
 from requests.exceptions import ConnectionError
 
@@ -449,10 +450,16 @@ class SMSToolApp(App):
     return SMSTool()
 
 if __name__ == '__main__':
-  Config.set( 'input', 'mouse', 'mouse,disable_multitouch') # section, option, value
-  Config.set( 'kivy', 'exit_on_escape', 0)
-  Config.set( 'graphics', 'position', 'custom')
-  
-  Window.size = (dp(330), dp(381))
+  Config.set('input', 'mouse', 'mouse,disable_multitouch') # section, option, value
+  Config.set('kivy', 'exit_on_escape', 0)
+
+  window_width = dp(660)
+  window_height = dp(762)
+
+  if platform.system() == 'Darwin':
+    window_width /= 2
+    window_height /= 2
+
+  Window.size = (window_width, window_height)
 
   SMSToolApp().run()
