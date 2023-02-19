@@ -454,7 +454,7 @@ if __name__ == '__main__':
   Config.set('kivy', 'exit_on_escape', 0)
 
   window_width = dp(660)
-  window_height = dp(762)
+  window_height = dp(776)
 
   if platform.system() == 'Darwin':
     window_width /= 2
