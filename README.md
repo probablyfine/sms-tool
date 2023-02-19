@@ -1,5 +1,5 @@
 # sms-tool
-This is a simple tool for sending text messages using the Twilio API. It might be useful if you need to quickly get started with an SMS campaign, but don't have the time/money/experience to develop and deploy a custom solution. You can run the tool right from your computer without worrying about cloud infrastructure.
+This is a simple tool for sending text messages using the Twilio API. It might be useful if you need to quickly get started with an SMS campaign, but don't have the time/money/experience to develop and deploy a custom solution. You can run the tool from your computer without worrying about cloud infrastructure.
 
 All you need to start is a Twilio account and a CSV file with contact information.
 
@@ -7,7 +7,7 @@ All you need to start is a Twilio account and a CSV file with contact informatio
 
 ## Alternatives
 
-There are several alternatives that accomplish something similar. In general, these seem to have some limitations and/or barriers to getting started if you aren't tech-savvy. Still, you might want to check them out - they could be a better fit for you depending on your needs and existing set-up.
+There are several alternatives that accomplish something similar. In general, these seem to have some limitations and/or barriers to getting started if you don't have coding experience. Still, you might want to check them out - they could be a better fit for you depending on your needs and existing set-up.
 
 - [Low Code and No Code Tools for Sending SMS](https://www.twilio.com/blog/5-low-codeno-code-tools-to-send-twilio-sms)
 - [Deployable CSV-to-SMS App](https://www.twilio.com/blog/serverless-sms-marketing-campaigns-csv)
