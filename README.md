@@ -21,18 +21,26 @@ The easiest way to get started is to download a pre-packaged executable (Windows
 Download the package here: (link coming soon)
 
 ### Run from source
-If you prefer, you can run the tool directly from source. Make sure you have Python 3 installed, then:
+If you prefer, you can run the tool directly from source. Make sure you have Python 3 installed. **As of this writing, Python 3.11 is not supported by Kivy.** 3.10 should work fine. Then:
 * Clone this repository
+
 * Open a terminal and install/update `setuptools` and `virtualenv` (Kivy doesn't seem to work well with `venv`, so use `virtualenv` instead):
+  
 `python3 -m pip install --upgrade pip setuptools virtualenv`
 * Create a new virtual environment:
+  
 `python3 -m virtualenv sms_venv`
+
 * Activate the virtual environment:
 	* On macOS/*nix: `source sms_venv/bin/activate`
 	* On Windows: `sms_venv\Scripts\activate.bat`
+
 * Navigate to the top-level directory of the repo, and install the required packages:
+  
 `python -m pip install -r requirements.txt`
+
 * Finally, run the main script:
+  
 `python sms_tool.py`
 
 ## Using the tool
