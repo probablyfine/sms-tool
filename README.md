@@ -17,7 +17,7 @@ There are several alternatives that accomplish something similar. In general, th
 ### Pre-packaged executable
 
 The easiest way to get started is to download a pre-packaged executable:
-* [Pre-built executable for Windows](https://www.dropbox.com/s/s9ncjvh62jeifzs/SMSTool.exe?dl=1)
+* [Pre-built executable for Windows](https://www.dropbox.com/s/6qkapuf0vb49v7a/SMSTool.exe?dl=1)
 * [Pre-built executable for macOS](https://www.dropbox.com/s/c04979j7igoln44/SMSTool.dmg?dl=1)
 
 ### Run from source
