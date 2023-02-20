@@ -16,9 +16,9 @@ There are several alternatives that accomplish something similar. In general, th
 
 ### Pre-packaged executable
 
-The easiest way to get started is to download a pre-packaged executable (Windows-only at the moment). It was generated using PyInstaller per the [Kivy docs](https://kivy.org/doc/stable/guide/packaging-windows.html).
-
-[Click here to download the executable.](https://www.dropbox.com/s/s9ncjvh62jeifzs/SMSTool.exe?dl=1)
+The easiest way to get started is to download a pre-packaged executable:
+* [Pre-built executable for Windows](https://www.dropbox.com/s/s9ncjvh62jeifzs/SMSTool.exe?dl=1)
+* [Pre-built executable for macOS](https://www.dropbox.com/s/c04979j7igoln44/SMSTool.dmg?dl=1)
 
 ### Run from source
 If you prefer, you can run the tool directly from source. Make sure you have Python 3 installed. **As of this writing, Python 3.11 is not supported by Kivy.** 3.10 should work fine. Then:
