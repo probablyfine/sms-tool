@@ -106,7 +106,7 @@ class RV(RecycleView):
 
     self.refresh_visible_rows()
 
-  def refresh_visible_rows(self):
+  def refresh_visible_rows(self, *args):
     for w in (
       self
       .children[0] # this is a RecycleBoxLayout

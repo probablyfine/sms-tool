@@ -46,6 +46,14 @@ class SMSTool(BoxLayout):
 
     Window.bind(on_drop_file=self.handle_file_drop)
 
+    Clock.schedule_interval(
+      self
+      .ids
+      .recycle_view
+      .refresh_visible_rows,
+      1
+    )
+
     self.text_inputs = [
       self.ids.text_input_account_sid,
       self.ids.text_input_auth_token,
